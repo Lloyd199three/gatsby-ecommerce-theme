@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Celestia Bracelet – Sterling Silver Gemstone</title>
+  <style>
+    body { font-family: Helvetica, sans-serif; margin:0; background:#fff; color:#2a2a2a; }
+    .container { max-width:900px; margin:0 auto; padding:20px; }
+    h1 { font-size:2rem; }
+    .price { font-size:1.5rem; font-weight:bold; color:#c0a062; margin:10px 0; }
+    .btn { background:#2a2a2a; color:#fff; padding:12px 20px; border:none; cursor:pointer; }
+    .btn:hover { background:#c0a062; }
+    form { margin-top:20px; }
+    label { display:block; margin-top:10px; }
+    input, select, textarea { width:100%; padding:8px; margin-top:5px; }
+    .status { margin-top:15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Celestia Bracelet</h1>
+    <p>Handmade Sterling Silver with Genuine Amethyst</p>
+    <div class="price">£145.00</div>
+    
+    <!-- ORDER FORM -->
+    <form id="orderForm">
+      <label>Your Name
+        <input type="text" name="name" required>
+      </label>
+      <label>Email Address
+        <input type="email" name="email" required>
+      </label>
+      <label>Shipping Address
+        <textarea name="address" required></textarea>
+      </label>
+      <label>Select Size
+        <select name="size" required>
+          <option value="Small">Small (16cm)</option>
+          <option value="Medium">Medium (18cm)</option>
+          <option value="Large">Large (20cm)</option>
+        </select>
+      </label>
+      <input type="hidden" name="product" value="Celestia Bracelet">
+      <input type="hidden" name="price" value="145">
+      
+      <button type="submit" class="btn">Buy Now</button>
+      <div id="status" class="status"></div>
+    </form>
+  </div>
+
+  <script>
+    const FLOW_URL = "YOUR_FLOW_HTTP_ENDPOINT"; // Replace with Power Automate Flow URL
+    const form = document.getElementById('orderForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = "Submitting order...";
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const res = await fetch(FLOW_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("Network error");
+        status.style.color = "green";
+        status.textContent = "✅ Order submitted! Check your email for confirmation.";
+        form.reset();
+      } catch (err) {
+        status.style.color = "red";
+        status.textContent = "❌ Something went wrong. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>
+  
